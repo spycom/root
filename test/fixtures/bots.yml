@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  id: 1
+  exp: 1
+  exp_all: 1
+  hdpts: 1
+  job: 1
+  level: 1
+  money: 1
+  name: MyString
+  sfpts: 1
+  continent: MyString
+  progress: 1
+  status: MyString
+  karma: 1
+
+two:
+  id: 1
+  exp: 1
+  exp_all: 1
+  hdpts: 1
+  job: 1
+  level: 1
+  money: 1
+  name: MyString
+  sfpts: 1
+  continent: MyString
+  progress: 1
+  status: MyString
+  karma: 1

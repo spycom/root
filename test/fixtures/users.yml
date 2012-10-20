@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  exp: 1
+  level: 1
+  money: 1
+  job: 1
+  hdpts: 1
+  sfpts: 1
+
+two:
+  name: MyString
+  exp: 1
+  level: 1
+  money: 1
+  job: 1
+  hdpts: 1
+  sfpts: 1

@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  id: 
+  uid: 
+  dhcp: 
+  dns: 
+  smtp: 
+  spam: 
+  loic: 
+  hosting: 
+  botnet: 1
+
+two:
+  id: 
+  uid: 
+  dhcp: 
+  dns: 
+  smtp: 
+  spam: 
+  loic: 
+  hosting: 
+  botnet: 1

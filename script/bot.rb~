@@ -1,0 +1,5 @@
+class Bot < ActiveRecord::Base
+  def self.index
+	puts "hello"
+  end
+end

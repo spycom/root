@@ -1,0 +1,388 @@
+    <!-- Le styles -->
+    <style>
+      body {
+        /*padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="../assets/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+
+<script language = 'javascript'>
+
+progress = <%=  @user.progress.to_i %>;
+
+  function startTime() {
+    var date = new Date();
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    if (hours < 10) hours = "0" + hours;
+    if (minutes < 10) minutes = "0" + minutes;
+    if (seconds < 10) seconds = "0" + seconds;
+    document.getElementById("time").innerHTML = hours + ":" + minutes + ":" + seconds;
+
+    
+	
+    setTimeout(showProgress, 1000);
+    setTimeout(doWork, 101000);
+	
+  }
+
+  function showProgress() {
+   	var date = new Date();
+	    var hours = date.getHours();
+	    var minutes = date.getMinutes();
+	    var seconds = date.getSeconds();
+	    if (hours < 10) hours = "0" + hours;
+	    if (minutes < 10) minutes = "0" + minutes;
+	    if (seconds < 10) seconds = "0" + seconds;
+	    document.getElementById("time").innerHTML = hours + ":" + minutes + ":" + seconds;
+	
+
+	document.getElementById("progresss").innerHTML = '<div class="bar" style="width: ' + progress +'%;"></div>';
+	progress = progress + 1;
+	
+	
+	setTimeout(showProgress, 1000);
+  }
+
+  function doWork() {
+    window.location = "<%=  "/game/job/" + @user.job.to_s %>";
+  }
+</script>
+
+<!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Continent');
+        data.addColumn('number', 'Nodes');
+        data.addRows([
+        	<% @continents.each do |continent| %>
+						['<%= continent.name %>', <%= continent.nodes %>],
+          <% end %>
+        ]);
+
+        // Set chart options
+        var options = {'title':'Nodes Registered',
+                       'width':400,
+                       'height':150};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+        // ------------------------------------------------------------------ graph 2
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Continent');
+        data.addColumn('number', 'Power');
+        data.addRows([
+        	<% @continents.each do |continent| %>
+						['<%= continent.name %>', <%= continent.power %>],
+          <% end %>
+        ]);
+
+        // Set chart options
+        var options = {'title':'Power Influence',
+                       'width':400,
+                       'height':150};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div2'));
+        chart.draw(data, options);
+      }
+    </script>
+
+  </head>
+
+<% if @user.job.to_i != 0 %>
+<body onLoad = 'startTime()'>
+<% else %>
+<body>
+<% end %>  
+
+  <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="..">/root</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+            build 0.3
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+  </div>
+
+  <div class="container">
+  	
+		
+      	
+	<div class="row-fluid">
+  <div class="span3">
+  	<div class="page-header">
+  		<h3>Welcome, <%= @user.name  %>! <br><small>Local time: <span id="time">00:00:00</span></small></h3>
+		</div>
+  	<h4>Status: <%= @user.status %> <i class="icon-star-empty"></i></h4>
+  	<div class="well well-small">
+  		<table class="table table-condensed">
+		   <tbody>
+			
+		    <tr><td><div class="span1"><h5>Level: <%= @user.level %></h5></div><div class="span1"><h5>Experience: <%= @user.exp_all %></h5></div><td></tr>
+		    <tr><td><div class="span2"><h5>Location: <%= @user.continent %></h5></div><div class="span1"><h5>Karma: <%= @user.karma %></h5></div></td></tr>
+		   
+			
+		    <tr><td><h5>Money: <%= @user.money %>$</h5></td></tr><tr><td>
+				<h5>Current job: <%= @job.name %></h5></td></tr><tr><td>
+				<h5>Salary: <%= @salary %>$</h5></td></tr>
+			 </tbody>
+			</table>
+  	</div>
+  	<h4>Environment: <%= @user.hdpts %></h4>
+  	<div class="well well-small">
+  		<table class="table table-condensed">
+		   <tbody>
+			
+		    <tr><td>
+				<div class="span1"><h5>CPU: <%= @user.cpu %> GHz</h5></div><div class="span1"><h5>Memory: <%= @user.memory %> Gb</h5></div></td></tr><tr><td>
+				
+				<h5>Storage: <%= @user.storage %> Tb</h5></td></tr><tr><td>
+				<h5>Network: <%= @user.network %></h5></td></tr><tr><td>
+				
+				<h5>Power: <%= @user.power %> level</h5></td></tr>
+			 </tbody>
+			</table>
+  	</div>
+  	<h4>Software: <%= @user.sfpts %> </h4>
+  	<div class="well well-small">
+  		<table class="table table-condensed">
+		   <tbody>
+			
+		    <tr><td>
+				<div class="span1"><h5>Intrusion: <%= @user.intrusion %></h5></div><div class="span1"><h5>Sociology: <%= @user.sociology %></h5></div></td></tr><tr><td>
+				
+				<div class="span2"><h5>Stock manipulation: <%= @user.stockman %></h5></div></td></tr>
+				<tr><td><div class="span1"><h5>Sociology: <%= @user.sociology %> </h5></div></td></tr><tr><td>
+				<div class="span1"><h5>Stealth: <%= @user.stealth %></h5></div><div class="span1"><h5>Telepresence: <%= @user.telepresence %> </h5></div></td></tr>
+			 </tbody>
+			</table>
+  	</div>
+  	<h4>Services</h4>
+  	<div class="well well-small">
+  		<table class="table table-condensed">
+		   <tbody>
+			
+		    <tr><td>
+				<div class="span1"><h5>DHCP: <%= @service_bla.dhcp %></h5></div><div class="span1"><h5>NAT: <%= @service_bla.nat %> </h5></div></td></tr>
+
+				<tr><td>
+				<div class="span1"><h5>DNS: <%= @service_bla.dns %> </h5></div><div class="span1"><h5>SMTP: <%= @service_bla.smtp %></h5></div></td></tr>
+				
+				<tr><td>
+				<div class="span1"><h5>Spam: <%= @service_bla.spam %> </h5></div><div class="span1"><h5>LOIC: <%= @service_bla.loic %> </h5></div></td></tr>
+				
+				<tr><td>
+				<div class="span1"><h5>Botnet: <%= @service_bla.botnet %> </h5></div><div class="span1"><h5>Hosting: <%= @service_bla.hosting %> </h5></div></td></tr>
+			 </tbody>
+			</table>
+  	</div>
+		<div class="well well-large">
+		<table class="table table-condensed">
+		  <tbody>
+			</tbody>
+		    <tr><td>
+			<h4>Connection: active</h4><tr><td>
+			<h5>Network: 192.168.0.0/24</h4><tr><td>
+			<h5>Hosts: 1</h4><tr><td>
+			<h5>Download: <%= @download %> kb</h4><tr><td>
+			<h5>Upload: <%= @upload %> kb</h4><tr><td>
+			<br></td></tr><tr><td>
+			<h4>Players: nope</h3><tr><td>
+			<h5>Tunnels: 0</h4><tr><td>
+			<h5>Routes: 1</h4><tr><td>
+			<h5>Victums: 0</h4><tr><td>
+			<h5>... </h4><tr><td>
+			<p></p></td></tr>
+			
+		
+		</table>
+		</div>
+  </div>
+
+  <div class="span5">
+		<h5>Current task: </h5>
+		<% if @user.job.to_i != 0 %>
+		
+		<p>- <%= @current_task %></p>
+		<% else %>
+		<p>- does not give a shit</p>
+		<% end %>  
+	
+		<h5>Progress:</h5>
+	
+		<div class="progress progress-striped active">
+		  		<span id="progresss"><div class="bar" style="width: 0%;"></div></span><br>
+		</div>
+
+
+	
+		<h5>Level UP: <%= 2 ** (@user.level - 1) * 100 %></h5>
+		<div class="progress progress-striped active">
+		  		<div class="bar" style="width: <%= @user.exp / 2 ** (@user.level - 1) %>%;"><%= @user.exp %></div><br>
+		</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>Place</th>
+				<th>Continet</th>
+				<th>Nodes</th>
+				<th>Power</th>
+				<th>Karma</th></tr>
+		</thead>
+		<tbody>
+		<% @i = 0 %>
+		<% @continents.each do |continent| %>
+			<% @i = @i + 1 %>
+			<% if continent.name == @user.continent %>
+					<tr class="success">
+				<% else %>
+					<tr class="info">
+				<% end %>
+				<td>
+				<% case @i %>
+				<% when 1 %>
+					<span class="badge badge-warning"><%= @i %></span>
+				<% when 2 %>
+					<span class="badge badge-success"><%= @i %></span>
+				<% when 3 %>
+					<span class="badge badge-important"><%= @i %></span>
+				<% when 4 %>
+					<span class="badge badge-info"><%= @i %></span>
+				<% when 5 %>
+					<span class="badge badge-inverse"><%= @i %></span>
+				<% else %>
+		  		<span class="badge "><%= @i %></span>
+		  	<% end %>
+		  	</td>
+		    <td><b><%= continent.name %> <% if continent.name == @user.continent %><i class="icon-home"></i><% end %></b></td>
+		    <td><%= continent.nodes %></td>
+				<td><%= continent.power %></td>
+		    <td><%= continent.karma %></td>
+		  </tr>
+		<% end %>
+
+	  </tbody>
+
+	</table>	
+	<!--Div that will hold the pie chart-->
+    <div id="chart_div"></div><div id="chart_div2"></div>
+	<div class="well">
+		<ul>
+			<li> Fight!
+			<li> interface and game mechanics level up
+			<li>Sessions connected
+			<li>Added abilities to fight fith another players.
+			<li>now we have some continents! everyone can select only one</li>
+			<li>Added 2 bots. Welcome, Kate and Alice are ready to rock.
+			<li>timer added! Time to go on...</li>
+			<li>user with valid name created</li>
+			<li>base connected</li>
+			<li>All your base are belong to us!!!!111</li>
+		</ul>
+	</div>
+  </div>
+  <div class="span4">
+	<div class="well well-large">
+		
+		
+		<table class="table table-bordered">
+		<tr><td>
+		<a class="btn btn-block btn-success" href="../game/job"><h4><i class="icon-briefcase"></i> Find new job &raquo;</h4></a><br>
+		</td></tr><tr><td>
+		<a class="btn btn-block btn-inverse" href="../game/hard"><i class="icon-shopping-cart"></i> Get new hardware &raquo;</a><BR>	
+		</td></tr><tr><td>
+		<a class="btn btn-block btn-inverse" href="../game/soft"><i class="icon-shopping-cart"></i> Get new software &raquo;</a><br>
+		</td></tr><tr><td>
+		<a class="btn btn-block btn-inverse" href="../game/db"><i class="icon-user"></i> Users database &raquo;</a><br>
+		</td></tr><tr><td>
+		<a class="btn btn-block btn-inverse" href="../game/evolve"><i class="icon-random"></i> Evolve &raquo;</a><br>
+		</td></tr><tr><td>
+		<a class="btn btn-block btn-inverse" href="../game/research"><i class="icon-tasks"></i>  Research &raquo;</a><br>
+		</td></tr><tr><td>
+		<a class="btn btn-block btn-inverse" href="../game/services"><i class="icon-heart"></i> Services &raquo;</a><br>
+		</td></tr><tr><td>
+		<a class="btn btn-block btn-inverse" href="../game/bots"><i class="icon-briefcase"></i> Bots and mobs &raquo;</a><br>
+		</td></tr><tr><td>
+		<br>
+		<a class="btn btn-block btn-primary disabled" href="../game/quests">Quests &raquo;</a><br>
+		</td></tr><tr><td>
+		<a class="btn btn-block btn-success disabled" href="../game/uplink">Uplinks &raquo;</a><br>
+		</td></tr><tr><td>
+		<a class="btn btn-block btn-info disabled" href="../game/ip">IP adress exchange &raquo;</a><br>
+		</td></tr><tr><td>
+		<a class="btn btn-block btn-info disabled" href="../game/domain">Domain exchange &raquo;</a>
+		</td></tr><tr><td>
+		<a class="btn btn-block btn-danger disabled" href="../game/attack">Attacks &raquo;</a>
+		</td></tr>
+
+		</table>
+  	</div>
+</div>
+</div>
+
+
+
+
+
+            
+
+
+<table class="table">
+  <tbody>
+    <tr>
+	<td></td>
+      <td></td>
+</tr>
+
+  </tbody>
+</table>
+
+    </div> <!-- /container -->
+
+    
+
+  </body>
+</html>
+

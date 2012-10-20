@@ -1,0 +1,3 @@
+class User < ActiveRecord::Base
+  attr_accessible :id, :exp, :hdpts, :job, :level, :money, :name, :sfpts, :continent
+end

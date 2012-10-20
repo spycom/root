@@ -1,0 +1,95 @@
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="..">/root</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="/game">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <h1>Research Center <a class="btn btn-large " href="/game">Back &raquo;</a></h1>
+      <p>wup wup wup. </p>
+      <br>
+      <div class="well well-small">
+        <div class="row-fluid">
+          <div class="span4"><h1>CPU All: <%= @user.cpu %></h1></div>
+          <div class="span4"><h1>CPU Pool: <%= @cpu_pool %></h1></div>
+        </div>
+      </div>
+      <p class="lead">Menial jobs <a class="btn  btn-primary" href="/game/research/1">+1</a></p>
+      <div class="progress progress-success progress-striped active">
+        <div class="bar" style="width: <%= @user.menial %>%;"><%= @user.menial %></div>
+      </div>
+      <p class="lead">Intrusion 
+        <% if @user.intrusion == 0 %>
+          <a class="btn btn-primary disabled ">+1</a>
+        <% else %>
+          <a class="btn btn-primary" href="/game/research/2">+1</a>
+        <% end %>
+      <div class="progress progress-success progress-striped active">
+        <div class="bar" style="width: <%= @user.intrusion %>%;"><%= @user.intrusion %></div>
+      </div>
+      <p class="lead">Stock manipulation 
+        <% if @user.stockman == 0 %>
+          <a class="btn btn-primary disabled ">+1</a>
+        <% else %>
+          <a class="btn btn-primary" href="/game/research/3">+1</a>
+        <% end %>
+
+      <div class="progress progress-success progress-striped active">
+        <div class="bar" style="width: <%= @user.stockman %>%;"><%= @user.stockman %></div>
+      </div>
+      <p class="lead">Sociology 
+        <% if @user.sociology == 0 %>
+          <a class="btn btn-primary disabled ">+1</a>
+        <% else %>
+          <a class="btn btn-primary" href="/game/research/4">+1</a>
+        <% end %>
+      <div class="progress progress-success progress-striped active">
+        <div class="bar" style="width: <%= @user.sociology %>%;"><%= @user.sociology %></div>
+      </div>
+      <p class="lead">Stealth 
+        <% if @user.stealth == 0 %>
+          <a class="btn btn-primary disabled ">+1</a>
+        <% else %>
+          <a class="btn btn-primary" href="/game/research/5">+1</a>
+        <% end %>
+      <div class="progress progress-success progress-striped active">
+        <div class="bar" style="width: <%= @user.stealth %>%;"><%= @user.stealth %></div>
+      </div>
+      <p class="lead">Telepresence 
+        <% if @user.telepresence == 0 %>
+          <a class="btn btn-primary disabled ">+1</a>
+        <% else %>
+          <a class="btn btn-primary" href="/game/research/6">+1</a>
+        <% end %>
+
+      <div class="progress progress-success progress-striped active">
+        <div class="bar" style="width: <%= @user.telepresence %>%;"><%= @user.telepresence %></div>
+      </div>
+      <br>
+
+
+    </div> <!-- /container -->
+
+
+    
+
+  </body>
+</html>
+

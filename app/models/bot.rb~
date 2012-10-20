@@ -1,0 +1,36 @@
+class Bot
+  def self.index
+	
+	evolve(30);
+	evolve(31);
+	
+  end
+
+def self.evolve(id) 
+	$user = User.find(id)
+	
+	$user.update_attribute(:money, $user.money + 10)
+	$user.update_attribute(:exp, $user.exp + 1)
+	#$user.update_attribute(:exp, $user.exp + 1)
+	if $user.exp % 100 == 0
+		$user.level = $user.level + 1
+	end
+end 
+
+def self.evolve_attack
+	upgradeHardware(30)
+	upgradeHardware(31)
+end
+
+def self.evolve_defense
+	upgradeSoftware(30)
+	upgradeSoftware(31)
+end
+
+def self.upgradeSoftware(id) 
+
+	$user = User.find(id)
+	$user.update_attribute(:sfpts, $user.sfpts + 1)
+	
+end 
+end

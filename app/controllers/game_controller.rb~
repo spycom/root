@@ -1,0 +1,312 @@
+class GameController < ApplicationController
+  def index
+	
+	# initialization
+	  if params[:task] == "start"
+		  @name = params[:name]
+
+		  if User.find(:first, :conditions => [ "name = ?", @name.downcase ]) != nil
+			
+			  @user = User.find(:first, :conditions => [ "name = ?", @name.downcase ])
+			
+					
+			  @status = @user.status
+			  @level = @user.level
+			  @location = @user.continent
+			  @current_job = @user.job
+			  @current_task = "thinking"
+			  @exp = @user.exp
+			  @money = @user.money
+
+			  @download = Random.rand(1024)
+			  @upload = Random.rand(1024)
+
+			  @hdpts = @user.hdpts
+			  @sfpts = @user.sfpts
+
+			  @attack = 0
+			  @progress = @user.progress
+          session[:current_user_id] = @user.id
+          #redirect_to :action => :index
+		else
+			  	
+			  @status = "host"
+			  @level = 1
+			  @location = "Africa"
+			  @current_job = "idle"
+			  @current_task = "idle"
+			  @exp = 0
+			  @money = 20
+
+			  @download = Random.rand(1024)
+			  @upload = Random.rand(1024)
+
+			  @hdpts = 1
+			  @sfpts = 1
+
+			  @attack = 0
+
+			  @user = User.new name:@name, status:"host", exp:0, progress:0, level:1, money:20, job:0, hdpts:1, sfpts:0, continent:@location
+	 		  @user.save
+
+			  @continent = Continent.find(:first, :conditions => [ "name = ?", @user.continent.downcase ])
+			  @continent.update_attribute(:nodes, @continent.nodes + 1)
+          session[:current_user_id] = @user.id
+		end
+ 		  
+	  else
+		  @id = session[:current_user_id]
+		  #@user = User.find(:first, :conditions => [ "id = ?", session[:current_user_id] ]) 
+			find_user
+
+			if @user.job != 0 
+				@current_task = "working"
+			end
+		  #@download += Random.rand(102) - 50
+		  #@upload += Random.rand(102) -50
+	  end
+
+	  @continents = Continent.all
+	  
+  end
+
+  def job 
+	
+	if params[:task] == "new"
+	  #@id = session[:current_user_id]
+	  @user = User.find(:first, :conditions => [ "id = ?", session[:current_user_id] ])
+	  
+		case params[:id].to_i
+			when 1
+				@current_job = "SPAM sender"
+				@current_task = "generating a lot of SPAM mails"
+				@salary = 10
+			when 2
+				@current_job = "DDoS provider"
+				@current_task = "gerating huge ethernet traffic"
+				@salary = 20
+			when 3
+				@current_job = "Porno hosting"
+				@current_task = "sharing porno materials"
+				@salary = 30
+			end
+
+		@user.update_attribute(:money, @user.money + params[:id].to_i * 10)
+		@user.update_attribute(:exp, @user.exp + 2 * params[:id].to_i)
+
+
+
+		if @user.exp >= 100
+			@user.update_attribute(:exp, @user.exp - 100)
+			@user.update_attribute(:level, @user.level + 1)
+		end
+
+		
+		
+		@user.update_attribute(:job, params[:id])
+
+		redirect_to :action => :index
+		
+	end
+  end
+
+  def hard 
+		#@hardware = Hardware.new name:"Memory", price:10, exp:0
+	 	#@hardware.save
+
+	if params[:task] == "new"
+		find_user
+		case params[:id].to_i
+			when 1
+				#$current_job = "SPAM sender"
+				#@user.hdpts += 1
+			when 2
+				#$current_job = "DDoS provider"
+				#$hdpts += 2
+			when 3
+				#$current_job = "Porno hosting"
+				#$hdpts += 3
+			end
+		@user.hdpts += params[:id].to_i
+		@user.money = @user.money.to_i - params[:id].to_i * 10
+		@user.exp += 3 * params[:id].to_i
+
+		if @user.exp.to_i >= 100
+			@user.exp += -100
+		end
+		@user.save
+		#$user.update_attribute(:exp, $exp + $level * 100)
+		#$user.update_attribute(:money, $money)
+		#$user.update_attribute(:hdpts, $hdpts)
+
+		redirect_to :action => :index
+		
+	end
+	
+	if params[:task] == "add"
+		@hardware = Hardware.new name:"", price:50, exp:40
+	 	@hardware.save
+
+		#redirect_to :action => :hard
+	end
+	#$money = $money.to_i - 15
+	#$exp += 5
+
+	@hardwares = Hardware.all
+
+  end
+
+  def soft 
+
+	if params[:task] == "new"
+		case params[:id].to_i
+			when 1
+				#$current_job = "SPAM sender"
+				$sfpts += 1
+			when 2
+				#$current_job = "DDoS provider"
+				$sfpts += 2
+			when 3
+				#$current_job = "Porno hosting"
+				$sfpts += 3
+		end
+
+		$money = $money.to_i - params[:id].to_i * 15
+		$exp += 4 * params[:id].to_i
+
+		if $exp.to_i >= 100
+			$exp += -100
+		end
+
+		$user.update_attribute(:exp, $exp + $level * 100)
+		$user.update_attribute(:money, $money)
+		$user.update_attribute(:sfpts, $sfpts)
+
+		redirect_to :action => :index
+		
+	end
+	#$money = $money.to_i - 25
+	#$exp += 10
+  end
+  
+  def show
+  end
+
+  def db
+	  @users = User.all
+	  
+  end
+
+  def quests
+  end
+
+  def uplink
+	  if params[:task] == "connect"
+		  redirect_to :action => :index
+	  end
+  end
+
+  def ip
+  end
+
+  def domain
+	  if params[:task] == "connect"
+		  redirect_to :action => :index
+	end
+  end
+
+  def attack 
+	  if params[:task] == "attack"
+		  @attack += @hdpts.to_i
+		  #params[:task] = "idle"
+		  #redirect_to :action => :attack
+	  end
+  end
+
+  def attack_user
+      @user = User.find(:first, :conditions => [ "id = ?", session[:current_user_id] ]) 
+      
+	  if params[:task] == "fight"
+	    @victum = User.find_by_id(params[:id])
+	    
+	    user_power = @user.hdpts + Random.rand(@user.level)
+	    victum_power = @victum.hdpts + Random.rand(@victum.level)
+	    if user_power > victum_power
+	      @result = 'Success! You won.'
+	      @msg = "You earned " + (10/(user_power - victum_power)).to_s + " experience."
+	      @victum.update_attribute(:money, @victum.money/2)
+	      @victum.update_attribute(:exp, @victum.exp + (user_power - victum_power))
+	      @user.update_attribute(:money, @user.money + @victum.money)
+  		  @user.update_attribute(:exp, @user.exp + 10/(user_power - victum_power))
+	    else
+	      @result = "Defeat! Try again."
+	      @msg = ""
+	      @victum.update_attribute(:money, @victum.money + 10)
+	      @user.update_attribute(:money, @user.money - @user.money/4)
+  		  @user.update_attribute(:exp, @user.exp + 1)
+  		  @victum.update_attribute(:exp, @victum.exp + 10/(@victum.hdpts - @user.hdpts + 1))
+	    end
+	    
+	    #@victum.update_attribute(:money, @victum.money - 10)
+		  #@user.update_attribute(:money, @user.money + 5)
+		  #@user.update_attribute(:exp, @user.exp + 2)
+	  else
+	    
+	    @victum = User.find_by_id(params[:id])
+	    
+	  if params[:id] == "fight"
+	      
+		  if @user.hdpts > @victum.hdpts
+	      @result = "Success! You won. <br> You earned " + (10/(@user.hdpts - @victum.hdpts)).to_s + " experience."
+	      @victum.update_attribute(:money, @victum.money - 10)
+	      @user.update_attribute(:money, @user.money + 5)
+  		  @user.update_attribute(:exp, @user.exp + 10/(@user.hdpts - @victum.hdpts))
+	    else
+	      @result = "Defeat! Try again."
+	      @victum.update_attribute(:money, @victum.money + 10)
+	      @user.update_attribute(:money, @user.money - 5)
+  		  @user.update_attribute(:exp, @user.exp + 1)
+  		  @victum.update_attribute(:exp, @victum.exp + 10/(@victum.hdpts - @user.hdpts + 1))
+	    end
+	  else
+		  if params[:id] != 0
+			  @victum = User.find_by_id(params[:id])
+		  else
+			  @victum = @user
+		  end
+	  end 
+	  end 
+  end
+
+	# select user by session id
+	def find_user
+		@user = User.find(:first, :conditions => [ "id = ?", session[:current_user_id] ])
+	end
+
+	# simulating fight between 2 players
+	def simulate_fight(agressor, victum)
+		user_power = agressor.hdpts + agressor.sfpts + Random.rand(agressor.level)
+		victum_power = victum.hdpts + victum.sfpts + Random.rand(victum.level)
+	    if user_power > victum_power
+	      @result = 'Success! You won.'
+	      @msg = "You earned " + (10/(user_power - victum_power)).to_s + " experience."
+	      victum.update_attribute(:money, victum.money/2)
+	      victum.update_attribute(:exp, victum.exp + (user_power - victum_power))
+	      agressor.update_attribute(:money, agressor.money + victum.money)
+  		  agressor.update_attribute(:exp, agressor.exp + 10/(user_power - victum_power))
+	    else
+	      @result = "Defeat! Try again."
+	      @msg = "Victum earned " + 10/(victum.hdpts - agressor.hdpts + 1) + " experience."
+	      victum.update_attribute(:money, victum.money + 10)
+	      agressor.update_attribute(:money, agressor.money - agressor.money/4)
+  		  agressor.update_attribute(:exp, agressor.exp + 1)
+  		  victum.update_attribute(:exp, victum.exp + 10/(victum.hdpts - agressor.hdpts + 1))
+	    end
+	end
+
+	# make money
+	def work(money)
+		@user.money = @user.money + money
+		@user.save
+	end
+end
