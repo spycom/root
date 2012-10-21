@@ -1,3 +1,6 @@
+# What is this class for?
+# You have no state. Module instead of Class?
+# Also, no underscores in class names (CamelCase)
 class Bot_class
   def self.index
 	
